@@ -1,7 +1,28 @@
 ﻿@page "/"
 
-<PageTitle>Home</PageTitle>
+<PageTitle>Salery Calculator</PageTitle>
 
-<h1>Hello, world!</h1>
+<MudContainer>
+    <MudForm>
+        <MudTextField Text="Base Salary" Placeholder="Base Salary" @bind-Value="BaseSalary"></MudTextField>
+        <MudTextField Placeholder="Other Allowance" @bind-Value="OtherAllowance"></MudTextField>
+        <MudTextField Placeholder="OT Hours" @bind-Value="OtHours"></MudTextField>
+        <MudButton ButtonType="ButtonType.Submit"></MudButton>
+    </MudForm>
+    @if (Result != null)
+    {
+        <MudText>@Result</MudText>
+    }
+    else
+    {
+        <MudText>"error"</MudText>
+    }
+</MudContainer>
 
-Welcome to your new app.
+@code {
+    public double BaseSalary;
+    public double OtherAllowance;
+    public double OtHours;
+    public double Result;
+}
+

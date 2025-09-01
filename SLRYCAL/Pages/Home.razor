@@ -74,8 +74,8 @@
         HolidayPay = dailyRate * OtHolidayDays;
 
         // Calculate Allowances
-        TravelAllowance = 22 * 50;
-        AccommodationAllowance = 30 * 40;
+        TravelAllowance = Math.Max(0, (22 - LeaveDays) * 50);
+        AccommodationAllowance = Math.Max(0, (30 - LeaveDays) * 40);
 
         // Calculate Deductions
         double baseSalaryDeduction = (BaseSalary / 30) * LeaveDays;

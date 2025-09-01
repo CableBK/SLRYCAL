@@ -1,28 +1,38 @@
 ﻿@page "/"
 
-<PageTitle>Salery Calculator</PageTitle>
+<PageTitle>Salary Calculator</PageTitle>
 
-<MudContainer>
-    <MudForm>
-        <MudTextField Text="Base Salary" Placeholder="Base Salary" @bind-Value="BaseSalary"></MudTextField>
-        <MudTextField Placeholder="Other Allowance" @bind-Value="OtherAllowance"></MudTextField>
-        <MudTextField Placeholder="OT Hours" @bind-Value="OtHours"></MudTextField>
-        <MudButton ButtonType="ButtonType.Submit"></MudButton>
-    </MudForm>
-    @if (Result != null)
-    {
-        <MudText>@Result</MudText>
-    }
-    else
-    {
-        <MudText>"error"</MudText>
-    }
+<MudContainer Class="d-flex align-center justify-center">
+    <MudPaper Class="pa-16 ma-2" Elevation="3" Style="max-width:640px; width:100%;">
+        <MudForm>
+            <MudTextField T="double" Label="Base Salary (THB)" @bind-Value="BaseSalary" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.AttachMoney" Required="true" RequiredError="Base Salary is required!" />
+            <MudTextField T="double" Label="Other Allowance (THB)" @bind-Value="OtherAllowance" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.AttachMoney" />
+            <MudTextField T="double" Label="OT Hours" @bind-Value="OtHours" Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.AccessTime" />
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="CalculateSalary" Class="mt-4">Calculate Salary</MudButton>
+        </MudForm>
+        <MudDivider Class="my-4" />
+        @if (HasCalculated)
+        {
+            <MudText Typo="Typo.h6">Result</MudText>
+            <MudText Typo="Typo.subtitle1">
+                Total Salary: <span style="font-weight:bold;">@Result.ToString("N2") THB</span>
+            </MudText>
+        }
+    </MudPaper>
 </MudContainer>
 
 @code {
-    public double BaseSalary;
-    public double OtherAllowance;
-    public double OtHours;
-    public double Result;
-}
+    public double BaseSalary { get; set; }
+    public double OtherAllowance { get; set; }
+    public double OtHours { get; set; }
+    public double Result { get; set; }
+    public bool HasCalculated { get; set; } = false;
 
+    private void CalculateSalary()
+    {
+        double hourlyRate = BaseSalary / 30 / 8; // Assumes 30 working days and 8 hours/day
+        double otPay = hourlyRate * 1.5 * OtHours; // 1.5x normal rate for OT
+        Result = BaseSalary + OtherAllowance + otPay;
+        HasCalculated = true;
+    }
+}

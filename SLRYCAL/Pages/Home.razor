@@ -3,51 +3,61 @@
 <PageTitle>Salary Calculator</PageTitle>
 
 <MudContainer Class="d-flex align-center justify-center">
-	<MudPaper Class="pa-16 ma-2" Elevation="3" Style="max-width:640px; width:100%;">
-		<MudForm>
-			<MudTextField T="double" Label="Base Salary (THB)" @bind-Value="BaseSalary" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.AttachMoney" Required="true" RequiredError="Base Salary is required!" />
-			<MudTextField T="double" Label="Other Allowance (THB)" @bind-Value="OtherAllowance" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.AttachMoney" />
-			<MudTextField T="double" Label="OT Hours" @bind-Value="OtHours" Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.AccessTime" />
-			<MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="CalculateSalary" Class="mt-4">Calculate Salary</MudButton>
-		</MudForm>
-		<MudDivider Class="my-4" />
-		@if (HasCalculated)
-		{
-			<MudText Typo="Typo.h6">Result</MudText>
-			<MudText Typo="Typo.subtitle1">
-				Total Salary: <span style="font-weight:bold;">@Result.ToString("N2") THB</span>
-			</MudText>
-		}
-	</MudPaper>
-	<MudPaper Class="pa-16 ma-2" Elevation="3" Style="max-width:640px; width:100%;">
-		<MudForm>
-			@if (HasCalculated)
-			{
-				<MudText Typo="Typo.h6">Detail</MudText>
-				<MudText Typo="Typo.subtitle1">
-					Hourly rate: <MudText style="font-weight:bold;">@hourlyRate.ToString() THB</MudText>
-					OT paid: <MudText style="font-weight:bold;">@otPay.ToString() THB</MudText>
-				</MudText>
-			}
-		</MudForm>
-		<MudDivider Class="my-4" />
-	</MudPaper>
+    <MudPaper Class="pa-16 ma-2" Elevation="3" Style="max-width:640px; width:100%;">
+        <MudForm>
+            <MudTextField T="double" Label="Base Salary (THB)" @bind-Value="BaseSalary" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.AttachMoney" Required="true" RequiredError="Base Salary is required!" />
+            <MudTextField T="double" Label="Other Allowance (THB)" @bind-Value="OtherAllowance" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.AttachMoney" />
+            <MudTextField T="int" Label="OT Normal Days (max 2 hours/day)" @bind-Value="OtNormalDays" Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.Event" />
+            <MudTextField T="int" Label="OT Holiday Days (max 2 hours/day)" @bind-Value="OtHolidayDays" Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.Event" />
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="CalculateSalary" Class="mt-4">Calculate Salary</MudButton>
+        </MudForm>
+        <MudDivider Class="my-4" />
+        @if (HasCalculated)
+        {
+            <MudText Typo="Typo.h6">Result</MudText>
+            <MudText Typo="Typo.subtitle1">
+                Total Salary: <span style="font-weight:bold;">@Result.ToString("N2") THB</span>
+            </MudText>
+            <MudText Typo="Typo.subtitle2">
+                - Base Salary: @BaseSalary.ToString("N2") THB
+            </MudText>
+            <MudText Typo="Typo.subtitle2">
+                - Other Allowance: @OtherAllowance.ToString("N2") THB
+            </MudText>
+            <MudText Typo="Typo.subtitle2">
+                - OT Pay (Normal): @OtNormalPay.ToString("N2") THB
+            </MudText>
+            <MudText Typo="Typo.subtitle2">
+                - OT Pay (Holiday): @OtHolidayPay.ToString("N2") THB
+            </MudText>
+            <MudText Typo="Typo.subtitle2">
+                - Holiday Pay: @HolidayPay.ToString("N2") THB
+            </MudText>
+        }
+    </MudPaper>
 </MudContainer>
 
 @code {
-	public double BaseSalary { get; set; }
-	public double OtherAllowance { get; set; }
-	public double OtHours { get; set; }
-	public double Result { get; set; }
-	public bool HasCalculated { get; set; } = false;
-	public double hourlyRate { get; set; }
-	public double otPay { get; set; }
+    public double BaseSalary { get; set; }
+    public double OtherAllowance { get; set; }
+    public int OtNormalDays { get; set; }
+    public int OtHolidayDays { get; set; }
+    public double Result { get; set; }
+    public double OtNormalPay { get; set; }
+    public double OtHolidayPay { get; set; }
+    public double HolidayPay { get; set; }
+    public bool HasCalculated { get; set; } = false;
 
-	private void CalculateSalary()
-	{
-		hourlyRate = BaseSalary / 30 / 8.5;
-		otPay = hourlyRate * 1.5 * OtHours;
-		Result = BaseSalary + OtherAllowance + otPay;
-		HasCalculated = true;
-	}
+    private void CalculateSalary()
+    {
+        double dailyRate = BaseSalary / 30;
+        double hourlyRate = BaseSalary / 30 / 8;
+
+        OtNormalPay = hourlyRate * 1.5 * (OtNormalDays * 2);
+        OtHolidayPay = hourlyRate * 3.0 * (OtHolidayDays * 2);
+        HolidayPay = dailyRate * OtHolidayDays;
+
+        Result = BaseSalary + OtherAllowance + OtNormalPay + OtHolidayPay + HolidayPay;
+        HasCalculated = true;
+    }
 }

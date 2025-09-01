@@ -3,88 +3,91 @@
 <PageTitle>Salary Calculator</PageTitle>
 
 <MudContainer MaxWidth="MaxWidth.ExtraExtraLarge">
-    <MudGrid Justify="Justify.Center">
-        <MudItem xs="12" sm="6">
-            <MudPaper Class="pa-8 ma-2" Elevation="3">
-                <MudForm>
-                    <MudTextField T="double" Label="Base Salary (THB)" @bind-Value="BaseSalary" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.AttachMoney" Required="true" RequiredError="Base Salary is required!" />
-                    <MudTextField T="double" Label="Other Allowance (THB)" @bind-Value="OtherAllowance" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.AttachMoney" />
-                    <MudTextField T="int" Label="OT Normal Days" @bind-Value="OtNormalDays" Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.Event" />
-                    <MudTextField T="int" Label="OT Holiday Days" @bind-Value="OtHolidayDays" Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.Event" />
-                    <MudTextField T="int" Label="Leave Days" @bind-Value="LeaveDays" Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.EventBusy" />
-                    <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="CalculateSalary" Class="mt-4">Calculate Salary</MudButton>
-                </MudForm>
-            </MudPaper>
-        </MudItem>
-        <MudItem xs="12" sm="6">
-            @if (HasCalculated)
-            {
-                <MudPaper Class="pa-8 ma-2" Elevation="3">
-                    <MudText Typo="Typo.h5" GutterBottom="true">Salary Breakdown</MudText>
-                    <MudText Typo="Typo.h6" Class="mud-text-secondary">Total Net Salary: <span style="font-weight:bold; color:var(--mud-palette-primary);">@Result.ToString("N2") THB</span></MudText>
-                    <MudDivider Class="my-4" />
-                    <MudText Typo="Typo.subtitle1">
-                        **Earnings:**
-                    </MudText>
-                    <MudText Typo="Typo.body2">- Base Salary: @BaseSalary.ToString("N2") THB</MudText>
-                    <MudText Typo="Typo.body2">- Other Allowance: @OtherAllowance.ToString("N2") THB</MudText>
-                    <MudText Typo="Typo.body2">- OT Pay (Normal): @OtNormalPay.ToString("N2") THB</MudText>
-                    <MudText Typo="Typo.body2">- OT Pay (Holiday): @OtHolidayPay.ToString("N2") THB</MudText>
-                    <MudText Typo="Typo.body2">- Holiday Pay: @HolidayPay.ToString("N2") THB</MudText>
-                    <MudText Typo="Typo.body2">- Travel Allowance: @TravelAllowance.ToString("N2") THB</MudText>
-                    <MudText Typo="Typo.body2">- Accommodation Allowance: @AccommodationAllowance.ToString("N2") THB</MudText>
-                    <MudText Typo="Typo.subtitle1" Class="mt-4">
-                        **Deductions:**
-                    </MudText>
-                    <MudText Typo="Typo.body2">- Total Leave Deduction: @TotalLeaveDeduction.ToString("N2") THB</MudText>
-                </MudPaper>
-            }
-        </MudItem>
-    </MudGrid>
+	<MudGrid Justify="Justify.Center">
+		<MudItem xs="12" sm="6">
+			<MudPaper Class="pa-8 ma-2" Elevation="3">
+				<MudForm>
+					<MudTextField T="double" Label="Base Salary (THB)" @bind-Value="BaseSalary" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.AttachMoney" Required="true" RequiredError="Base Salary is required!" />
+					<MudTextField T="double" Label="Other Allowance (THB)" @bind-Value="OtherAllowance" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.AttachMoney" />
+					<MudTextField T="int" Label="OT Normal Days" @bind-Value="OtNormalDays" Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.Event" />
+					<MudTextField T="int" Label="OT Holiday Days" @bind-Value="OtHolidayDays" Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.Event" />
+					<MudTextField T="int" Label="Leave Days" @bind-Value="LeaveDays" Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.EventBusy" />
+					<MudTextField T="double" Label="Social Security (THB)" @bind-Value="SocialSecurity" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Security" />
+					<MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="CalculateSalary" Class="mt-4">Calculate Salary</MudButton>
+				</MudForm>
+			</MudPaper>
+		</MudItem>
+		<MudItem xs="12" sm="6">
+			@if (HasCalculated)
+			{
+				<MudPaper Class="pa-8 ma-2" Elevation="3">
+					<MudText Typo="Typo.h5" GutterBottom="true">Salary Breakdown</MudText>
+					<MudText Typo="Typo.h6" Class="mud-text-secondary">Total Net Salary: <span style="font-weight:bold; color:var(--mud-palette-primary);">@Result.ToString("N2") THB</span></MudText>
+					<MudDivider Class="my-4" />
+					<MudText Typo="Typo.subtitle1">
+						**Earnings:**
+					</MudText>
+					<MudText Typo="Typo.body2">- Base Salary: @BaseSalary.ToString("N2") THB</MudText>
+					<MudText Typo="Typo.body2">- Other Allowance: @OtherAllowance.ToString("N2") THB</MudText>
+					<MudText Typo="Typo.body2">- OT Pay (Normal): @OtNormalPay.ToString("N2") THB</MudText>
+					<MudText Typo="Typo.body2">- OT Pay (Holiday): @OtHolidayPay.ToString("N2") THB</MudText>
+					<MudText Typo="Typo.body2">- Holiday Pay: @HolidayPay.ToString("N2") THB</MudText>
+					<MudText Typo="Typo.body2">- Travel Allowance: @TravelAllowance.ToString("N2") THB</MudText>
+					<MudText Typo="Typo.body2">- Accommodation Allowance: @AccommodationAllowance.ToString("N2") THB</MudText>
+					<MudText Typo="Typo.subtitle1" Class="mt-4">
+						**Deductions:**
+					</MudText>
+					<MudText Typo="Typo.body2">- Total Leave Deduction: @TotalLeaveDeduction.ToString("N2") THB</MudText>
+					<MudText Typo="Typo.body2">- Social Security Deduction: @SocialSecurity.ToString("N2") THB</MudText>
+				</MudPaper>
+			}
+		</MudItem>
+	</MudGrid>
 </MudContainer>
 
 @code {
-    public double BaseSalary { get; set; }
-    public double OtherAllowance { get; set; }
-    public int OtNormalDays { get; set; }
-    public int OtHolidayDays { get; set; }
-    public int LeaveDays { get; set; }
-    public double Result { get; set; }
+	public double BaseSalary { get; set; }
+	public double OtherAllowance { get; set; }
+	public int OtNormalDays { get; set; }
+	public int OtHolidayDays { get; set; }
+	public int LeaveDays { get; set; }
+	public double SocialSecurity { get; set; }
+	public double Result { get; set; }
 
-    // Breakdown variables
-    public double OtNormalPay { get; set; }
-    public double OtHolidayPay { get; set; }
-    public double HolidayPay { get; set; }
-    public double TravelAllowance { get; set; }
-    public double AccommodationAllowance { get; set; }
-    public double TotalLeaveDeduction { get; set; }
+	// Breakdown variables
+	public double OtNormalPay { get; set; }
+	public double OtHolidayPay { get; set; }
+	public double HolidayPay { get; set; }
+	public double TravelAllowance { get; set; }
+	public double AccommodationAllowance { get; set; }
+	public double TotalLeaveDeduction { get; set; }
 
-    public bool HasCalculated { get; set; } = false;
+	public bool HasCalculated { get; set; } = false;
 
-    private void CalculateSalary()
-    {
-        double hourlyRate = BaseSalary / 30 / 8.5;
-        double dailyRate = BaseSalary / 30;
+	private void CalculateSalary()
+	{
+		double hourlyRate = BaseSalary / 30 / 8.5;
+		double dailyRate = BaseSalary / 30;
 
-        // Calculate OT Pay
-        OtNormalPay = hourlyRate * 1.5 * (OtNormalDays * 2);
-        OtHolidayPay = hourlyRate * 3.0 * (OtHolidayDays * 2);
+		// Calculate OT Pay
+		OtNormalPay = hourlyRate * 1.5 * (OtNormalDays * 2);
+		OtHolidayPay = hourlyRate * 3.0 * (OtHolidayDays * 2);
 
-        // Calculate Holiday Pay
-        HolidayPay = dailyRate * OtHolidayDays;
+		// Calculate Holiday Pay
+		HolidayPay = dailyRate * OtHolidayDays;
 
-        // Calculate Allowances
-        TravelAllowance = Math.Max(0, (22 - LeaveDays) * 50);
-        AccommodationAllowance = Math.Max(0, (30 - LeaveDays) * 40);
+		// Calculate Allowances
+		TravelAllowance = Math.Max(0, (22 - LeaveDays) * 50);
+		AccommodationAllowance = Math.Max(0, (30 - LeaveDays) * 40);
 
-        // Calculate Deductions
-        double baseSalaryDeduction = (BaseSalary / 30) * LeaveDays;
-        double otherAllowanceDeduction = (OtherAllowance / 30) * LeaveDays;
-        TotalLeaveDeduction = baseSalaryDeduction + otherAllowanceDeduction;
+		// Calculate Deductions
+		double baseSalaryDeduction = (BaseSalary / 30) * LeaveDays;
+		double otherAllowanceDeduction = (OtherAllowance / 30) * LeaveDays;
+		TotalLeaveDeduction = baseSalaryDeduction + otherAllowanceDeduction;
 
-        // Calculate Final Salary
-        Result = (BaseSalary - baseSalaryDeduction) + (OtherAllowance - otherAllowanceDeduction) + OtNormalPay + OtHolidayPay + HolidayPay + TravelAllowance + AccommodationAllowance;
+		// Calculate Final Salary
+		Result = (BaseSalary - baseSalaryDeduction) + (OtherAllowance - otherAllowanceDeduction) + OtNormalPay + OtHolidayPay + HolidayPay + TravelAllowance + AccommodationAllowance - SocialSecurity;
 
-        HasCalculated = true;
-    }
+		HasCalculated = true;
+	}
 }

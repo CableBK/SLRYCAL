@@ -9,6 +9,7 @@
 				<MudForm>
 					<MudTextField T="double" Label="Base Salary (THB)" @bind-Value="BaseSalary" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.AttachMoney" Required="true" RequiredError="Base Salary is required!" />
 					<MudTextField T="double" Label="Other Allowance (THB)" @bind-Value="OtherAllowance" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.AttachMoney" />
+					<MudTextField T="double" Label="Performance Bonus (THB)" @bind-Value="PerformanceBonus" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.EmojiEvents" />
 					<MudTextField T="int" Label="OT Normal Days" @bind-Value="OtNormalDays" Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.Event" />
 					<MudTextField T="int" Label="OT Holiday Days" @bind-Value="OtHolidayDays" Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.Event" />
 					<MudTextField T="int" Label="Leave Days" @bind-Value="LeaveDays" Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.EventBusy" />
@@ -29,6 +30,7 @@
 					</MudText>
 					<MudText Typo="Typo.body2">- Base Salary: @BaseSalary.ToString("N2") THB</MudText>
 					<MudText Typo="Typo.body2">- Other Allowance: @OtherAllowance.ToString("N2") THB</MudText>
+					<MudText Typo="Typo.body2">- Performance Bonus: @PerformanceBonus.ToString("N2") THB</MudText>
 					<MudText Typo="Typo.body2">- OT Pay (Normal): @OtNormalPay.ToString("N2") THB</MudText>
 					<MudText Typo="Typo.body2">- OT Pay (Holiday): @OtHolidayPay.ToString("N2") THB</MudText>
 					<MudText Typo="Typo.body2">- Holiday Pay: @HolidayPay.ToString("N2") THB</MudText>
@@ -50,6 +52,7 @@
 	public double OtherAllowance { get; set; }
 	public int OtNormalDays { get; set; }
 	public int OtHolidayDays { get; set; }
+	public double PerformanceBonus { get; set; }
 	public int LeaveDays { get; set; }
 	public double SocialSecurity { get; set; }
 	public double Result { get; set; }
@@ -86,7 +89,7 @@
 		TotalLeaveDeduction = baseSalaryDeduction + otherAllowanceDeduction;
 
 		// Calculate Final Salary
-		Result = (BaseSalary - baseSalaryDeduction) + (OtherAllowance - otherAllowanceDeduction) + OtNormalPay + OtHolidayPay + HolidayPay + TravelAllowance + AccommodationAllowance - SocialSecurity;
+		Result = (BaseSalary - baseSalaryDeduction) + (OtherAllowance - otherAllowanceDeduction) + OtNormalPay + OtHolidayPay + HolidayPay + TravelAllowance + AccommodationAllowance + PerformanceBonus - SocialSecurity;
 
 		HasCalculated = true;
 	}

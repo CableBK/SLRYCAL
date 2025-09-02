@@ -1,7 +1,7 @@
 {
   "mainAssemblyName": "SLRYCAL",
   "resources": {
-    "hash": "sha256-RwwyBbgJQJBbpYOWQ/p5ZY5KjsD3OpfPAmCmUcRZ0/A=",
+    "hash": "sha256-nFTRennr7OZIAvbfX7AxTGd1/IeehyfkIwC9bbRNOj4=",
     "jsModuleNative": {
       "dotnet.native.js": "sha256-VdKq87/z5NIxZKmuM+fv38XF+RcEb/bg3jVBwQSfwP4="
     },
@@ -36,7 +36,7 @@
       "Microsoft.JSInterop.wasm": "sha256-H3pzsfF0i83i3SLusBYIOemsZZPsM+MYPmSlnOyDU1c=",
       "Microsoft.JSInterop.WebAssembly.wasm": "sha256-Nde97m8sZyz01NwVHDOJiS8YTnjxsDgzGTQGZ3ZxJ0w=",
       "MudBlazor.wasm": "sha256-TJ+hyKPpIi7uYsYssD9MdlvnxGX592hA3OuHiMJMhbc=",
-      "SLRYCAL.wasm": "sha256-VtW0h5xRucx2PW2oCb8LyBh6D+GC/MyC/c8F0LFgI+E=",
+      "SLRYCAL.wasm": "sha256-cpLc96lQJj3Lz8dBh6WidClzP53AXJPmlpv9EHUD+jw=",
       "System.Collections.Concurrent.wasm": "sha256-ga9VRVIpVzucjpei3tzhgR66r+0lsgZixS3PyrMWBCA=",
       "System.Collections.Immutable.wasm": "sha256-QgmrMk8WhyFENVnWCCcANpdtdtVHlaH5H/3SN81Oj9Y=",
       "System.Collections.wasm": "sha256-6BSFkZNpd7Hs1tGvl+8Y71OW5e6CjteOpuFLVPRChBQ=",
@@ -61,7 +61,6 @@
       "System.wasm": "sha256-rJDiJLn9vFaPuc+koNsD2sHOPKsWg6PhywVlVUHLN/A="
     }
   },
-  "cacheBootResources": true,
   "debugLevel": 0,
   "linkerEnabled": true,
   "globalizationMode": "sharded",

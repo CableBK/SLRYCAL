@@ -7,6 +7,21 @@
 		<MudItem xs="12" sm="6">
 			<MudPaper Class="pa-8 ma-2" Elevation="3">
 				<MudForm>
+                    <MudText Typo="Typo.h6" Class="mt-4">Select Month</MudText>
+                    <MudSelect T="int" Label="Month" @bind-Value="month" Variant="Variant.Outlined" Dense="true">
+                        <MudSelectItem Value="1">January</MudSelectItem>
+                        <MudSelectItem Value="2">February</MudSelectItem>
+                        <MudSelectItem Value="3">March</MudSelectItem>
+                        <MudSelectItem Value="4">April</MudSelectItem>
+                        <MudSelectItem Value="5">May</MudSelectItem>
+                        <MudSelectItem Value="6">June</MudSelectItem>
+                        <MudSelectItem Value="7">July</MudSelectItem>
+                        <MudSelectItem Value="8">August</MudSelectItem>
+                        <MudSelectItem Value="9">September</MudSelectItem>
+                        <MudSelectItem Value="10">October</MudSelectItem>
+                        <MudSelectItem Value="11">November</MudSelectItem>
+                        <MudSelectItem Value="12">December</MudSelectItem>
+                    </MudSelect>
 					<MudTextField T="double" Label="Base Salary (THB)" @bind-Value="BaseSalary" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.AttachMoney" Required="true" RequiredError="Base Salary is required!" />
 					<MudTextField T="double" Label="Other Allowance (THB)" @bind-Value="OtherAllowance" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.AttachMoney" />
 					<MudTextField T="double" Label="Performance Bonus (THB)" @bind-Value="PerformanceBonus" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.EmojiEvents" />
@@ -39,6 +54,7 @@
 					<MudText Typo="Typo.subtitle1" Class="mt-4">
 						**Deductions:**
 					</MudText>
+                    <MudText Typo="Typo.body2">- Meal Deduction (@PublicHolidayDays วัน): @MealDeduction.ToString("N2") THB</MudText>
 					<MudText Typo="Typo.body2">- Total Leave Deduction: @TotalLeaveDeduction.ToString("N2") THB</MudText>
 					<MudText Typo="Typo.body2">- Social Security Deduction: @SocialSecurity.ToString("N2") THB</MudText>
 				</MudPaper>
@@ -48,82 +64,87 @@
 </MudContainer>
 
 @code {
-	public double BaseSalary { get; set; }
-	public double OtherAllowance { get; set; }
-	public int OtNormalDays { get; set; }
-	public int OtHolidayDays { get; set; }
-	public double PerformanceBonus { get; set; } = 700;
-	public int LeaveDays { get; set; }
-	public double SocialSecurity { get; set; } = 750;
-	public double Result { get; set; }
-	public int year = 2025;
-	public int month = 1;
+    public double BaseSalary { get; set; }
+    public double OtherAllowance { get; set; }
+    public int OtNormalDays { get; set; }
+    public int OtHolidayDays { get; set; }
+    public double PerformanceBonus { get; set; } = 700;
+    public int LeaveDays { get; set; }
+    public double SocialSecurity { get; set; } = 750;
+    public double Result { get; set; }
+    public int year = 2025;
+    public int month = 1;
 
-	// Breakdown variables
-	public double OtNormalPay { get; set; }
-	public double OtHolidayPay { get; set; }
-	public double HolidayPay { get; set; }
-	public double TravelAllowance { get; set; }
-	public double AccommodationAllowance { get; set; }
-	public double TotalLeaveDeduction { get; set; }
+    // Breakdown variables
+    public double OtNormalPay { get; set; }
+    public double OtHolidayPay { get; set; }
+    public double HolidayPay { get; set; }
+    public double TravelAllowance { get; set; }
+    public double AccommodationAllowance { get; set; }
+    public double TotalLeaveDeduction { get; set; }
+    public int PublicHolidayDays { get; set; }
+    public double MealDeduction { get; set; }
 
-	public bool HasCalculated { get; set; } = false;
+    public bool HasCalculated { get; set; } = false;
 
-	public static class HolidayCalendar
-	{
-		// Key = (Year, Month), Value = จำนวนวันหยุด
-		private static readonly Dictionary<(int Year, int Month), int> Holidays = new Dictionary<(int, int), int>
-				{
-		{ (2025, 1), 1 },
-		{ (2025, 2), 0 },
-		{ (2025, 3), 0 },
-		{ (2025, 4), 3 },
-		{ (2025, 5), 2 },
-		{ (2025, 6), 1 },
-		{ (2025, 7), 1 },
-		{ (2025, 8), 1 },
-		{ (2025, 9), 0 },
-		{ (2025, 10), 1 },
-		{ (2025, 11), 0 },
-		{ (2025, 12), 3 },
-				};
+    public static class HolidayCalendar
+    {
+        private static readonly Dictionary<(int Year, int Month), int> Holidays = new()
+        {
+            { (2025, 1), 1 },
+            { (2025, 2), 0 },
+            { (2025, 3), 0 },
+            { (2025, 4), 3 },
+            { (2025, 5), 2 },
+            { (2025, 6), 1 },
+            { (2025, 7), 1 },
+            { (2025, 8), 1 },
+            { (2025, 9), 0 },
+            { (2025, 10), 1 },
+            { (2025, 11), 0 },
+            { (2025, 12), 3 },
+        };
 
-		public static int GetHolidayDays(int year, int month)
-		{
-			return Holidays.TryGetValue((year, month), out int days) ? days : 0;
-		}
-	}
+        public static int GetHolidayDays(int year, int month)
+        {
+            return Holidays.TryGetValue((year, month), out int days) ? days : 0;
+        }
+    }
 
+    private void CalculateSalary()
+    {
+        double hourlyRate = BaseSalary / 30 / 8.5;
+        double dailyRate = BaseSalary / 30;
 
-	private void CalculateSalary()
-	{
-		double hourlyRate = BaseSalary / 30 / 8.5;
-		double dailyRate = BaseSalary / 30;
+        // Calculate OT Pay
+        OtNormalPay = hourlyRate * 1.5 * (OtNormalDays * 2);
+        OtHolidayPay = hourlyRate * 3.0 * (OtHolidayDays * 2);
 
-		// Calculate OT Pay
-		OtNormalPay = hourlyRate * 1.5 * (OtNormalDays * 2);
-		OtHolidayPay = hourlyRate * 3.0 * (OtHolidayDays * 2);
+        // Calculate Holiday Pay
+        HolidayPay = dailyRate * OtHolidayDays;
 
-		// Calculate Holiday Pay
-		HolidayPay = dailyRate * OtHolidayDays;
+        // Calculate Allowances
+        TravelAllowance = Math.Max(0, (22 - LeaveDays) * 50);
+        AccommodationAllowance = Math.Max(0, (30 - LeaveDays) * 40);
 
-		// Calculate Allowances
-		TravelAllowance = Math.Max(0, (22 - LeaveDays) * 50);
-		AccommodationAllowance = Math.Max(0, (30 - LeaveDays) * 40);
+        // Calculate Deductions
+        double baseSalaryDeduction = (BaseSalary / 30) * LeaveDays;
+        double otherAllowanceDeduction = (OtherAllowance / 30) * LeaveDays;
+        TotalLeaveDeduction = baseSalaryDeduction + otherAllowanceDeduction;
 
-		// Calculate Deductions
-		double baseSalaryDeduction = (BaseSalary / 30) * LeaveDays;
-		double otherAllowanceDeduction = (OtherAllowance / 30) * LeaveDays;
-		TotalLeaveDeduction = baseSalaryDeduction + otherAllowanceDeduction;
+        // Public holiday & meal deduction
+        PublicHolidayDays = HolidayCalendar.GetHolidayDays(year, month);
+        MealDeduction = PublicHolidayDays * 40;
 
-		// Calculate Final Salary
-		Result = (BaseSalary - baseSalaryDeduction) + (OtherAllowance - otherAllowanceDeduction) + OtNormalPay + OtHolidayPay + HolidayPay + TravelAllowance + AccommodationAllowance + PerformanceBonus - SocialSecurity;
-		
-		var PublicHolidayDays = HolidayCalendar.GetHolidayDays(year, month);
-		var MealDeduction = PublicHolidayDays * 40;
+        // Calculate Final Salary (รวม MealDeduction ด้วย)
+        Result = (BaseSalary - baseSalaryDeduction)
+                + (OtherAllowance - otherAllowanceDeduction)
+                + OtNormalPay + OtHolidayPay + HolidayPay
+                + TravelAllowance + AccommodationAllowance
+                + PerformanceBonus
+                - SocialSecurity
+                - MealDeduction;
 
-		HasCalculated = true;
-	}
-
-
+        HasCalculated = true;
+    }
 }

@@ -2,7 +2,7 @@
 
 <PageTitle>Salary Calculator</PageTitle>
 
-<MudContainer MaxWidth="MaxWidth.ExtraExtraLarge" >
+<MudContainer MaxWidth="MaxWidth.ExtraExtraLarge">
 	<MudGrid Justify="Justify.Center">
 		<MudItem xs="12" sm="6">
 			<MudPaper Class="pa-8 ma-2" Elevation="3">
@@ -56,6 +56,8 @@
 	public int LeaveDays { get; set; }
 	public double SocialSecurity { get; set; } = 750;
 	public double Result { get; set; }
+	public int year = 2025;
+	public int month = 1;
 
 	// Breakdown variables
 	public double OtNormalPay { get; set; }
@@ -66,6 +68,32 @@
 	public double TotalLeaveDeduction { get; set; }
 
 	public bool HasCalculated { get; set; } = false;
+
+	public static class HolidayCalendar
+	{
+		// Key = (Year, Month), Value = จำนวนวันหยุด
+		private static readonly Dictionary<(int Year, int Month), int> Holidays = new Dictionary<(int, int), int>
+				{
+		{ (2025, 1), 1 },
+		{ (2025, 2), 0 },
+		{ (2025, 3), 0 },
+		{ (2025, 4), 3 },
+		{ (2025, 5), 2 },
+		{ (2025, 6), 1 },
+		{ (2025, 7), 1 },
+		{ (2025, 8), 1 },
+		{ (2025, 9), 0 },
+		{ (2025, 10), 1 },
+		{ (2025, 11), 0 },
+		{ (2025, 12), 3 },
+				};
+
+		public static int GetHolidayDays(int year, int month)
+		{
+			return Holidays.TryGetValue((year, month), out int days) ? days : 0;
+		}
+	}
+
 
 	private void CalculateSalary()
 	{
@@ -90,7 +118,12 @@
 
 		// Calculate Final Salary
 		Result = (BaseSalary - baseSalaryDeduction) + (OtherAllowance - otherAllowanceDeduction) + OtNormalPay + OtHolidayPay + HolidayPay + TravelAllowance + AccommodationAllowance + PerformanceBonus - SocialSecurity;
+		
+		var PublicHolidayDays = HolidayCalendar.GetHolidayDays(year, month);
+		var MealDeduction = PublicHolidayDays * 40;
 
 		HasCalculated = true;
 	}
+
+
 }

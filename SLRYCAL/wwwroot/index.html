@@ -20,11 +20,26 @@
 
 <body>
     <div id="app">
-        <svg class="loading-progress">
-            <circle r="40%" cx="50%" cy="50%" />
-            <circle r="40%" cx="50%" cy="50%" />
-        </svg>
-        <div class="loading-progress-text"></div>
+        <div id="splash-screen" style="
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+        background: white;
+    ">
+            <img src="icon-192.png" alt="App Icon" style="width: 96px; height: 96px; margin-bottom: 24px;" />
+            <h1 style="font-family: 'Roboto', sans-serif; font-weight: 700; color: #1976d2; margin-bottom: 8px;">SLRYCAL</h1>
+            <div style="color: #555; font-size: 1.1rem; margin-bottom: 24px;">Loading your salary calculator...</div>
+            <div class="splash-loader" style="
+            width: 48px;
+            height: 48px;
+            border: 6px solid #e0e0e0;
+            border-top: 6px solid #1976d2;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        "></div>
+        </div>
     </div>
 
     <div id="blazor-error-ui">

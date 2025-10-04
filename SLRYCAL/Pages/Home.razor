@@ -1,124 +1,320 @@
 ﻿@page "/"
 
-<MudAppBar Elevation="0" Color="Color.Primary" Dense="true">
-    <MudText Typo="Typo.h6" Class="ml-2">Salary Calculator</MudText>
-</MudAppBar>
+<PageTitle>Salary Calculator</PageTitle>
 
-<MudContainer MaxWidth="MaxWidth.Large" Class="pa-0">
-    <MudGrid Justify="Justify.Center" Class="mt-4">
-        <MudItem xs="12" sm="10" md="6">
-            <MudCard Class="pa-4 mud-card-rounded" Elevation="6" Style="background: linear-gradient(135deg, #e3f2fd 0%, #fce4ec 100%);">
-                <MudCardContent>
-                    <MudForm>
-                        <MudText Typo="Typo.h6" Class="mb-2">Select Month</MudText>
-                        <MudSelect T="int" Label="Month" @bind-Value="month" Variant="Variant.Filled" Dense="true" Class="mb-3">
-                            <MudSelectItem Value="1">January</MudSelectItem>
-                            <MudSelectItem Value="2">February</MudSelectItem>
-                            <MudSelectItem Value="3">March</MudSelectItem>
-                            <MudSelectItem Value="4">April</MudSelectItem>
-                            <MudSelectItem Value="5">May</MudSelectItem>
-                            <MudSelectItem Value="6">June</MudSelectItem>
-                            <MudSelectItem Value="7">July</MudSelectItem>
-                            <MudSelectItem Value="8">August</MudSelectItem>
-                            <MudSelectItem Value="9">September</MudSelectItem>
-                            <MudSelectItem Value="10">October</MudSelectItem>
-                            <MudSelectItem Value="11">November</MudSelectItem>
-                            <MudSelectItem Value="12">December</MudSelectItem>
-                        </MudSelect>
-                        <MudTextField T="double" Label="Base Salary (THB)" @bind-Value="BaseSalary" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.AttachMoney" Required="true" RequiredError="Base Salary is required!" Variant="Variant.Filled" Class="mb-3" />
-                        <MudTextField T="double" Label="Other Allowance (THB)" @bind-Value="OtherAllowance" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.AttachMoney" Variant="Variant.Filled" Class="mb-3" />
-                        <MudTextField T="double" Label="Performance Bonus (THB)" @bind-Value="PerformanceBonus" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.EmojiEvents" Variant="Variant.Filled" Class="mb-3" />
-                        <MudTextField T="int" Label="OT Normal Days" @bind-Value="OtNormalDays" Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.Event" Variant="Variant.Filled" Class="mb-3" />
-                        <MudTextField T="int" Label="OT Holiday Days" @bind-Value="OtHolidayDays" Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.Event" Variant="Variant.Filled" Class="mb-3" />
-                        <MudTextField T="int" Label="Leave Days" @bind-Value="LeaveDays" Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.EventBusy" Variant="Variant.Filled" Class="mb-3" />
-                        <MudTextField T="double" Label="Social Security (THB)" @bind-Value="SocialSecurity" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Security" Variant="Variant.Filled" Class="mb-3" />
-                        <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="CalculateSalary" Class="mt-4 mud-width-full" Style="border-radius: 24px;">Calculate Salary</MudButton>
-                    </MudForm>
-                </MudCardContent>
-            </MudCard>
-        </MudItem>
-        <MudItem xs="12" sm="10" md="6" Class="mt-4">
-            @if (HasCalculated)
-            {
-                <MudCard Class="pa-4 mud-card-rounded" Elevation="6" Style="background: linear-gradient(135deg, #fce4ec 0%, #e3f2fd 100%);">
-                    <MudCardContent>
-                        <MudText Typo="Typo.h5" GutterBottom="true" Class="mb-2">
-                            <MudAvatar Icon="@Icons.Material.Filled.AccountBalanceWallet" Color="Color.Primary" Size="Size.Large" Class="mr-2" />
-                            Salary Breakdown
-                        </MudText>
-                        <MudDivider Class="my-2" />
-                        <MudText Typo="Typo.h6" Class="mud-text-primary mb-2">
-                            Total Net Salary: <span style="font-weight:bold;">@Result.ToString("N2") THB</span>
-                        </MudText>
-                        <MudExpansionPanels>
-                            <MudExpansionPanel Text="Earnings" Icon="@Icons.Material.Filled.TrendingUp">
-                                <MudList T="string" Dense="true">
-                                    <MudListItem>
-                                        <MudListItemIcon Icon="@Icons.Material.Filled.AttachMoney" />
-                                        <MudListItemText>Base Salary: @BaseSalary.ToString("N2") THB</MudListItemText>
-                                    </MudListItem>
-                                    <MudListItem>
-                                        <MudListItemIcon Icon="@Icons.Material.Filled.AttachMoney" />
-                                        <MudListItemText>Other Allowance: @OtherAllowance.ToString("N2") THB</MudListItemText>
-                                    </MudListItem>
-                                    <MudListItem>
-                                        <MudListItemIcon Icon="@Icons.Material.Filled.EmojiEvents" />
-                                        <MudListItemText>Performance Bonus: @PerformanceBonus.ToString("N2") THB</MudListItemText>
-                                    </MudListItem>
-                                    <MudListItem>
-                                        <MudListItemIcon Icon="@Icons.Material.Filled.Event" />
-                                        <MudListItemText>OT Pay (Normal): @OtNormalPay.ToString("N2") THB</MudListItemText>
-                                    </MudListItem>
-                                    <MudListItem>
-                                        <MudListItemIcon Icon="@Icons.Material.Filled.Event" />
-                                        <MudListItemText>OT Pay (Holiday): @OtHolidayPay.ToString("N2") THB</MudListItemText>
-                                    </MudListItem>
-                                    <MudListItem>
-                                        <MudListItemIcon Icon="@Icons.Material.Filled.CalendarToday" />
-                                        <MudListItemText>Holiday Pay: @HolidayPay.ToString("N2") THB</MudListItemText>
-                                    </MudListItem>
-                                    <MudListItem>
-                                        <MudListItemIcon Icon="@Icons.Material.Filled.DirectionsBus" />
-                                        <MudListItemText>Travel Allowance: @TravelAllowance.ToString("N2") THB</MudListItemText>
-                                    </MudListItem>
-                                    <MudListItem>
-                                        <MudListItemIcon Icon="@Icons.Material.Filled.Hotel" />
-                                        <MudListItemText>Accommodation Allowance: @AccommodationAllowance.ToString("N2") THB</MudListItemText>
-                                    </MudListItem>
-                                </MudList>
-                            </MudExpansionPanel>
-                            <MudExpansionPanel Text="Deductions" Icon="@Icons.Material.Filled.TrendingDown">
-                                <MudList T="string" Dense="true">
-                                    <MudListItem>
-                                        <MudListItemIcon Icon="@Icons.Material.Filled.Fastfood" />
-                                        <MudListItemText>Meal Deduction (@PublicHolidayDays days): @MealDeduction.ToString("N2") THB</MudListItemText>
-                                    </MudListItem>
-                                    <MudListItem>
-                                        <MudListItemIcon Icon="@Icons.Material.Filled.EventBusy" />
-                                        <MudListItemText>Total Leave Deduction: @TotalLeaveDeduction.ToString("N2") THB</MudListItemText>
-                                    </MudListItem>
-                                    <MudListItem>
-                                        <MudListItemIcon Icon="@Icons.Material.Filled.Security" />
-                                        <MudListItemText>Social Security Deduction: @SocialSecurity.ToString("N2") THB</MudListItemText>
-                                    </MudListItem>
-                                </MudList>
-                            </MudExpansionPanel>
-                        </MudExpansionPanels>
-                    </MudCardContent>
-                </MudCard>
-            }
-        </MudItem>
-    </MudGrid>
+<MudContainer MaxWidth="MaxWidth.Small" Class="px-2">
+    <!-- Header Section -->
+    <MudCard Class="mb-4 mud-elevation-0" Style="background: linear-gradient(135deg, var(--mud-palette-primary) 0%, var(--mud-palette-secondary) 100%); border-radius: 24px;">
+        <MudCardContent Class="pa-6 text-center">
+            <MudIcon Icon="@Icons.Material.Filled.Calculate" Size="Size.Large" Class="mb-2" Style="color: white; font-size: 3rem;" />
+            <MudText Typo="Typo.h4" Style="color: white; font-weight: 600; margin-bottom: 8px;">Salary Calculator</MudText>
+            <MudText Typo="Typo.body1" Style="color: rgba(255,255,255,0.8);">Calculate your monthly earnings</MudText>
+        </MudCardContent>
+    </MudCard>
+
+    <!-- Input Form -->
+    <MudCard Class="mb-4" Style="border-radius: 20px; box-shadow: 0 8px 32px rgba(0,0,0,0.08);">
+        <MudCardContent Class="pa-6">
+            <MudForm>
+                <!-- Month Selection -->
+                <div class="mb-6">
+                    <MudText Typo="Typo.subtitle1" Class="mb-3" Style="font-weight: 600; color: var(--mud-palette-text-primary);">
+                        <MudIcon Icon="@Icons.Material.Filled.CalendarMonth" Class="mr-2" Size="Size.Small" />
+                        Select Month
+                    </MudText>
+                    <MudSelect T="int" @bind-Value="month" 
+                              Variant="Variant.Filled" 
+                              Dense="false"
+                              Style="border-radius: 16px;"
+                              AnchorOrigin="Origin.BottomCenter"
+                              TransformOrigin="Origin.TopCenter">
+                        <MudSelectItem Value="1">January</MudSelectItem>
+                        <MudSelectItem Value="2">February</MudSelectItem>
+                        <MudSelectItem Value="3">March</MudSelectItem>
+                        <MudSelectItem Value="4">April</MudSelectItem>
+                        <MudSelectItem Value="5">May</MudSelectItem>
+                        <MudSelectItem Value="6">June</MudSelectItem>
+                        <MudSelectItem Value="7">July</MudSelectItem>
+                        <MudSelectItem Value="8">August</MudSelectItem>
+                        <MudSelectItem Value="9">September</MudSelectItem>
+                        <MudSelectItem Value="10">October</MudSelectItem>
+                        <MudSelectItem Value="11">November</MudSelectItem>
+                        <MudSelectItem Value="12">December</MudSelectItem>
+                    </MudSelect>
+                </div>
+
+                <!-- Income Section -->
+                <div class="mb-6">
+                    <MudText Typo="Typo.subtitle1" Class="mb-3" Style="font-weight: 600; color: var(--mud-palette-success-default);">
+                        <MudIcon Icon="@Icons.Material.Filled.TrendingUp" Class="mr-2" Size="Size.Small" />
+                        Income Details
+                    </MudText>
+                    <div class="mb-4">
+                        <MudTextField T="double" 
+                                     Label="Base Salary" 
+                                     @bind-Value="BaseSalary" 
+                                     Adornment="Adornment.Start" 
+                                     AdornmentIcon="@Icons.Material.Filled.AttachMoney"
+                                     AdornmentColor="Color.Success"
+                                     Variant="Variant.Filled"
+                                     Required="true" 
+                                     RequiredError="Base Salary is required!"
+                                     Suffix="THB"
+                                     Style="border-radius: 16px;" />
+                    </div>
+                    <div class="mb-4">
+                        <MudTextField T="double" 
+                                     Label="Other Allowance" 
+                                     @bind-Value="OtherAllowance" 
+                                     Adornment="Adornment.Start" 
+                                     AdornmentIcon="@Icons.Material.Filled.AccountBalance"
+                                     AdornmentColor="Color.Success"
+                                     Variant="Variant.Filled"
+                                     Suffix="THB"
+                                     Style="border-radius: 16px;" />
+                    </div>
+                    <div class="mb-4">
+                        <MudTextField T="double" 
+                                     Label="Performance Bonus" 
+                                     @bind-Value="PerformanceBonus" 
+                                     Adornment="Adornment.Start" 
+                                     AdornmentIcon="@Icons.Material.Filled.EmojiEvents"
+                                     AdornmentColor="Color.Warning"
+                                     Variant="Variant.Filled"
+                                     Suffix="THB"
+                                     Style="border-radius: 16px;" />
+                    </div>
+                </div>
+
+                <!-- Work Schedule Section -->
+                <div class="mb-6">
+                    <MudText Typo="Typo.subtitle1" Class="mb-3" Style="font-weight: 600; color: var(--mud-palette-info-default);">
+                        <MudIcon Icon="@Icons.Material.Filled.Schedule" Class="mr-2" Size="Size.Small" />
+                        Work Schedule
+                    </MudText>
+                    <MudGrid Spacing="2">
+                        <MudItem xs="6">
+                            <MudTextField T="int" 
+                                         Label="OT Normal Days" 
+                                         @bind-Value="OtNormalDays" 
+                                         Adornment="Adornment.Start" 
+                                         AdornmentIcon="@Icons.Material.Filled.AccessTime"
+                                         AdornmentColor="Color.Info"
+                                         Variant="Variant.Filled"
+                                         Style="border-radius: 16px;" />
+                        </MudItem>
+                        <MudItem xs="6">
+                            <MudTextField T="int" 
+                                         Label="OT Holiday Days" 
+                                         @bind-Value="OtHolidayDays" 
+                                         Adornment="Adornment.Start" 
+                                         AdornmentIcon="@Icons.Material.Filled.Weekend"
+                                         AdornmentColor="Color.Info"
+                                         Variant="Variant.Filled"
+                                         Style="border-radius: 16px;" />
+                        </MudItem>
+                    </MudGrid>
+                    <div class="mt-4">
+                        <MudTextField T="int" 
+                                     Label="Leave Days" 
+                                     @bind-Value="LeaveDays" 
+                                     Adornment="Adornment.Start" 
+                                     AdornmentIcon="@Icons.Material.Filled.EventBusy"
+                                     AdornmentColor="Color.Error"
+                                     Variant="Variant.Filled"
+                                     Style="border-radius: 16px;" />
+                    </div>
+                </div>
+
+                <!-- Deductions Section -->
+                <div class="mb-6">
+                    <MudText Typo="Typo.subtitle1" Class="mb-3" Style="font-weight: 600; color: var(--mud-palette-error-default);">
+                        <MudIcon Icon="@Icons.Material.Filled.RemoveCircle" Class="mr-2" Size="Size.Small" />
+                        Deductions
+                    </MudText>
+                    <MudTextField T="double" 
+                                 Label="Social Security" 
+                                 @bind-Value="SocialSecurity" 
+                                 Adornment="Adornment.Start" 
+                                 AdornmentIcon="@Icons.Material.Filled.Security"
+                                 AdornmentColor="Color.Error"
+                                 Variant="Variant.Filled"
+                                 Suffix="THB"
+                                 Style="border-radius: 16px;" />
+                </div>
+
+                <!-- Calculate Button -->
+                <MudButton Variant="Variant.Filled" 
+                          Color="Color.Primary" 
+                          OnClick="CalculateSalary" 
+                          FullWidth="true"
+                          Size="Size.Large"
+                          StartIcon="@Icons.Material.Filled.Calculate"
+                          Style="border-radius: 16px; height: 56px; font-weight: 600; text-transform: none; font-size: 1.1rem;">
+                    Calculate My Salary
+                </MudButton>
+            </MudForm>
+        </MudCardContent>
+    </MudCard>
+
+    <!-- Results Section -->
+    @if (HasCalculated)
+    {
+        <!-- Total Salary Card -->
+        <MudCard Class="mb-4" Style="border-radius: 20px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); box-shadow: 0 12px 40px rgba(102, 126, 234, 0.3);">
+            <MudCardContent Class="pa-6 text-center">
+                <MudIcon Icon="@Icons.Material.Filled.AccountBalanceWallet" Size="Size.Large" Style="color: white; font-size: 2.5rem; margin-bottom: 12px;" />
+                <MudText Typo="Typo.body2" Style="color: rgba(255,255,255,0.8); margin-bottom: 8px;">Total Net Salary</MudText>
+                <MudText Typo="Typo.h3" Style="color: white; font-weight: 700; margin-bottom: 4px;">@Result.ToString("N0")</MudText>
+                <MudText Typo="Typo.h6" Style="color: rgba(255,255,255,0.9);">THB</MudText>
+            </MudCardContent>
+        </MudCard>
+
+        <!-- Breakdown Cards -->
+        <MudExpansionPanels Style="border-radius: 20px; overflow: hidden; box-shadow: 0 8px 32px rgba(0,0,0,0.08);">
+            <!-- Earnings Panel -->
+            <MudExpansionPanel>
+                <TitleContent>
+                    <div style="display: flex; align-items: center; padding: 8px 0;">
+                        <MudIcon Icon="@Icons.Material.Filled.TrendingUp" Class="mr-3" Style="color: var(--mud-palette-success-default);" />
+                        <MudText Typo="Typo.subtitle1" Style="font-weight: 600; color: var(--mud-palette-success-default);">Total Earnings</MudText>
+                        <MudSpacer />
+                        <MudChip T="string" Color="Color.Success" Size="Size.Small" Style="font-weight: 600;">
+                            @((BaseSalary + OtherAllowance + PerformanceBonus + OtNormalPay + OtHolidayPay + HolidayPay + TravelAllowance + AccommodationAllowance).ToString("N0")) THB
+                        </MudChip>
+                    </div>
+                </TitleContent>
+                <ChildContent>
+                    <div class="pa-4" style="background-color: rgba(76, 175, 80, 0.05);">
+                        <MudList T="string" Dense="true">
+                            <MudListItem Icon="@Icons.Material.Filled.AttachMoney" IconColor="Color.Success">
+                                <div class="d-flex justify-space-between align-center">
+                                    <MudText>Base Salary</MudText>
+                                    <MudText Style="font-weight: 600;">@BaseSalary.ToString("N2") THB</MudText>
+                                </div>
+                            </MudListItem>
+                            <MudListItem Icon="@Icons.Material.Filled.AccountBalance" IconColor="Color.Success">
+                                <div class="d-flex justify-space-between align-center">
+                                    <MudText>Other Allowance</MudText>
+                                    <MudText Style="font-weight: 600;">@OtherAllowance.ToString("N2") THB</MudText>
+                                </div>
+                            </MudListItem>
+                            <MudListItem Icon="@Icons.Material.Filled.EmojiEvents" IconColor="Color.Warning">
+                                <div class="d-flex justify-space-between align-center">
+                                    <MudText>Performance Bonus</MudText>
+                                    <MudText Style="font-weight: 600;">@PerformanceBonus.ToString("N2") THB</MudText>
+                                </div>
+                            </MudListItem>
+                            <MudListItem Icon="@Icons.Material.Filled.AccessTime" IconColor="Color.Info">
+                                <div class="d-flex justify-space-between align-center">
+                                    <MudText>OT Pay (Normal)</MudText>
+                                    <MudText Style="font-weight: 600;">@OtNormalPay.ToString("N2") THB</MudText>
+                                </div>
+                            </MudListItem>
+                            <MudListItem Icon="@Icons.Material.Filled.Weekend" IconColor="Color.Info">
+                                <div class="d-flex justify-space-between align-center">
+                                    <MudText>OT Pay (Holiday)</MudText>
+                                    <MudText Style="font-weight: 600;">@OtHolidayPay.ToString("N2") THB</MudText>
+                                </div>
+                            </MudListItem>
+                            <MudListItem Icon="@Icons.Material.Filled.CardGiftcard" IconColor="Color.Primary">
+                                <div class="d-flex justify-space-between align-center">
+                                    <MudText>Holiday Pay</MudText>
+                                    <MudText Style="font-weight: 600;">@HolidayPay.ToString("N2") THB</MudText>
+                                </div>
+                            </MudListItem>
+                            <MudListItem Icon="@Icons.Material.Filled.DirectionsCar" IconColor="Color.Tertiary">
+                                <div class="d-flex justify-space-between align-center">
+                                    <MudText>Travel Allowance</MudText>
+                                    <MudText Style="font-weight: 600;">@TravelAllowance.ToString("N2") THB</MudText>
+                                </div>
+                            </MudListItem>
+                            <MudListItem Icon="@Icons.Material.Filled.Home" IconColor="Color.Tertiary">
+                                <div class="d-flex justify-space-between align-center">
+                                    <MudText>Accommodation Allowance</MudText>
+                                    <MudText Style="font-weight: 600;">@AccommodationAllowance.ToString("N2") THB</MudText>
+                                </div>
+                            </MudListItem>
+                        </MudList>
+                    </div>
+                </ChildContent>
+            </MudExpansionPanel>
+
+            <!-- Deductions Panel -->
+            <MudExpansionPanel>
+                <TitleContent>
+                    <div style="display: flex; align-items: center; padding: 8px 0;">
+                        <MudIcon Icon="@Icons.Material.Filled.RemoveCircle" Class="mr-3" Style="color: var(--mud-palette-error-default);" />
+                        <MudText Typo="Typo.subtitle1" Style="font-weight: 600; color: var(--mud-palette-error-default);">Total Deductions</MudText>
+                        <MudSpacer />
+                        <MudChip T="string" Color="Color.Error" Size="Size.Small" Style="font-weight: 600;">
+                            @((MealDeduction + TotalLeaveDeduction + SocialSecurity).ToString("N0")) THB
+                        </MudChip>
+                    </div>
+                </TitleContent>
+                <ChildContent>
+                    <div class="pa-4" style="background-color: rgba(244, 67, 54, 0.05);">
+                        <MudList T="string" Dense="true">
+                            <MudListItem Icon="@Icons.Material.Filled.Restaurant" IconColor="Color.Error">
+                                <div class="d-flex justify-space-between align-center">
+                                    <MudText>Meal Deduction (@PublicHolidayDays days)</MudText>
+                                    <MudText Style="font-weight: 600;">@MealDeduction.ToString("N2") THB</MudText>
+                                </div>
+                            </MudListItem>
+                            <MudListItem Icon="@Icons.Material.Filled.EventBusy" IconColor="Color.Error">
+                                <div class="d-flex justify-space-between align-center">
+                                    <MudText>Leave Deduction</MudText>
+                                    <MudText Style="font-weight: 600;">@TotalLeaveDeduction.ToString("N2") THB</MudText>
+                                </div>
+                            </MudListItem>
+                            <MudListItem Icon="@Icons.Material.Filled.Security" IconColor="Color.Error">
+                                <div class="d-flex justify-space-between align-center">
+                                    <MudText>Social Security</MudText>
+                                    <MudText Style="font-weight: 600;">@SocialSecurity.ToString("N2") THB</MudText>
+                                </div>
+                            </MudListItem>
+                        </MudList>
+                    </div>
+                </ChildContent>
+            </MudExpansionPanel>
+        </MudExpansionPanels>
+
+        <!-- Share/Save Actions -->
+        <MudCard Class="mt-4" Style="border-radius: 20px; box-shadow: 0 8px 32px rgba(0,0,0,0.08);">
+            <MudCardContent Class="pa-4">
+                <MudGrid Justify="Justify.SpaceBetween">
+                    <MudItem xs="6">
+                        <MudButton Variant="Variant.Outlined" 
+                                  Color="Color.Primary" 
+                                  FullWidth="true"
+                                  StartIcon="@Icons.Material.Filled.Share"
+                                  Style="border-radius: 12px; text-transform: none;">
+                            Share
+                        </MudButton>
+                    </MudItem>
+                    <MudItem xs="6">
+                        <MudButton Variant="Variant.Outlined" 
+                                  Color="Color.Secondary" 
+                                  FullWidth="true"
+                                  StartIcon="@Icons.Material.Filled.Download"
+                                  Style="border-radius: 12px; text-transform: none;">
+                            Export
+                        </MudButton>
+                    </MudItem>
+                </MudGrid>
+            </MudCardContent>
+        </MudCard>
+    }
+
+    <!-- Footer -->
+    <div class="text-center mt-6 mb-4">
+        <MudText Typo="Typo.caption" Style="color: var(--mud-palette-text-secondary);">
+            Made with ❤️ using MudBlazor
+        </MudText>
+    </div>
 </MudContainer>
 
-<MudBottomNavigation Class="mud-width-full" Style="position:fixed;bottom:0;left:0;z-index:100;">
-    <MudBottomNavigationItem Icon="@Icons.Material.Filled.Home" Label="Home" />
-    <MudBottomNavigationItem Icon="@Icons.Material.Filled.Calculate" Label="Calculator" />
-    <MudBottomNavigationItem Icon="@Icons.Material.Filled.Info" Label="Info" />
-</MudBottomNavigation>
-
 @code {
-    // ... (your existing logic code remains unchanged)
     public double BaseSalary { get; set; }
     public double OtherAllowance { get; set; }
     public int OtNormalDays { get; set; }
@@ -130,6 +326,7 @@
     public int year = 2025;
     public int month = 1;
 
+    // Breakdown variables
     public double OtNormalPay { get; set; }
     public double OtHolidayPay { get; set; }
     public double HolidayPay { get; set; }
@@ -170,21 +367,27 @@
         double hourlyRate = BaseSalary / 30 / 8.5;
         double dailyRate = BaseSalary / 30;
 
+        // Calculate OT Pay
         OtNormalPay = hourlyRate * 1.5 * (OtNormalDays * 2);
         OtHolidayPay = hourlyRate * 3.0 * (OtHolidayDays * 2);
 
+        // Calculate Holiday Pay
         HolidayPay = dailyRate * OtHolidayDays;
 
+        // Calculate Allowances
         TravelAllowance = Math.Max(0, (22 - LeaveDays) * 50);
         AccommodationAllowance = Math.Max(0, (30 - LeaveDays) * 40);
 
+        // Calculate Deductions
         double baseSalaryDeduction = (BaseSalary / 30) * LeaveDays;
         double otherAllowanceDeduction = (OtherAllowance / 30) * LeaveDays;
         TotalLeaveDeduction = baseSalaryDeduction + otherAllowanceDeduction;
 
+        // Public holiday & meal deduction
         PublicHolidayDays = HolidayCalendar.GetHolidayDays(year, month);
         MealDeduction = PublicHolidayDays * 40;
 
+        // Calculate Final Salary
         Result = (BaseSalary - baseSalaryDeduction)
                 + (OtherAllowance - otherAllowanceDeduction)
                 + OtNormalPay + OtHolidayPay + HolidayPay
